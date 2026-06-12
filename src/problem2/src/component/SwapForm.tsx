@@ -283,10 +283,6 @@ export default function SwapForm(): React.JSX.Element {
                 1 {fromToken.symbol} = {exchangeRate < 0.001 ? exchangeRate.toFixed(8) : exchangeRate.toFixed(4)} {toToken.symbol}
               </span>
             </div>
-            <div className="flex justify-between items-center">
-              <span>Slippage Tolerance</span>
-              <span className="text-emerald-400 font-medium">0.5%</span>
-            </div>
           </div>
         )}
 
