@@ -1,0 +1,95 @@
+import React, { useMemo } from 'react';
+
+// 1. FIXED: Added the missing 'blockchain' property to the interface
+interface WalletBalance {
+  blockchain: string; // Added because it's used in filtering and sorting
+  currency: string;
+  amount: number;
+}
+
+// 2. OPTIMIZATION: Extended WalletBalance to keep the code DRY
+interface FormattedWalletBalance extends WalletBalance {
+  formatted: string;
+}
+
+interface Props extends BoxProps {}
+
+// 3. OPTIMIZATION: Moved getPriority outside the component
+// FIXED: Changed parameter type from 'any' to 'string'
+const getPriority = (blockchain: string): number => {
+  switch (blockchain) {
+    case 'Osmosis':
+      return 100;
+    case 'Ethereum':
+      return 50;
+    case 'Arbitrum':
+      return 30;
+    // Grouped identical return values together
+    case 'Zilliqa':
+    case 'Neo': 
+      return 20;
+    default:
+      return -99;
+  }
+};
+
+const WalletPage: React.FC<Props> = (props: Props) => {
+  const { children, ...rest } = props;
+  const balances = useWalletBalances();
+  const prices = usePrices();
+
+  // 4. OPTIMIZATION & BUG FIX: 
+  // - Combined filter, sort, and map into a single useMemo pipeline for O(N) efficiency.
+  // - FIXED: Removed 'prices' from the dependency array because it's not used inside useMemo.
+  //   This prevents unnecessary heavy sorting recalculations whenever crypto prices change.
+  const formattedBalances = useMemo(() => {
+    return balances
+      .filter((balance: WalletBalance) => {
+        // FIXED: Replaced the undefined variable 'lhsPriority' with 'balancePriority'
+        const balancePriority = getPriority(balance.blockchain);
+        
+        // FIXED: Corrected the inverse logic. Usually, we want to display balances > 0.
+        // Also ensures we filter out untracked blockchains (priority > -99).
+        return balancePriority > -99 && balance.amount > 0;
+      })
+      .sort((lhs: WalletBalance, rhs: WalletBalance) => {
+        const leftPriority = getPriority(lhs.blockchain);
+        const rightPriority = getPriority(rhs.blockchain);
+        
+        // FIXED: Simplified the sorting logic to clean, descending order.
+        // Also correctly handles the edge case where priorities are equal (returns 0).
+        return rightPriority - leftPriority;
+      })
+      .map((balance: WalletBalance): FormattedWalletBalance => {
+        return {
+          ...balance,
+          // FIXED: Added fixed decimal places (e.g., 2) for better currency presentation.
+          formatted: balance.amount.toFixed(2), 
+        };
+      });
+  }, [balances]);
+
+  // 5. FIXED: Now mapping over 'formattedBalances' instead of 'sortedBalances'.
+  // This ensures 'balance.formatted' is actually populated and available.
+  const rows = formattedBalances.map((balance: FormattedWalletBalance) => {
+    // OPTIMIZATION: Added fallback '|| 0' in case a specific currency price is missing from the API.
+    const usdValue = (prices[balance.currency] || 0) * balance.amount;
+    
+    return (
+      <WalletRow 
+        className={classes.row}
+        // FIXED: Replaced volatile array 'index' with a unique, stable string key combination.
+        key={`${balance.blockchain}-${balance.currency}`} 
+        amount={balance.amount}
+        usdValue={usdValue}
+        formattedAmount={balance.formatted}
+      />
+    );
+  });
+
+  return (
+    <div {...rest}>
+      {rows}
+    </div>
+  );
+};
