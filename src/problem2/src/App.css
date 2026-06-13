@@ -1,1 +1,100 @@
 @import "tailwindcss";
+
+.bg-animation-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--bg);
+  pointer-events: none;
+}
+.bg-custom-blob {
+  position: absolute;
+  width: 550px;
+  height: 550px;
+  background: var(--accent);
+  border-radius: 50%;
+  mix-blend-mode: multiply;
+  filter: blur(90px);
+  opacity: 0.14; 
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.bg-blob-1 {
+  top: -5%;
+  left: -5%;
+  animation: intenseBlobOne 14s infinite alternate ease-in-out; 
+}
+
+.bg-blob-2 {
+  bottom: -5%;
+  right: -5%;
+  animation: intenseBlobTwo 16s infinite alternate ease-in-out;
+  animation-delay: -3s;
+  background: #3b82f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .bg-custom-blob {
+    mix-blend-mode: plus-lighter;
+    opacity: 0.08; 
+    filter: blur(130px);
+  }
+}
+
+.bg-custom-particle {
+  position: absolute;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .bg-custom-particle {
+    opacity: 0.22;
+    box-shadow: 0 0 10px var(--accent);
+  }
+}
+.bg-part-1 { width: 9px; height: 9px; top: 15%; left: 10%; animation: intenseFloatOne 9s infinite linear; }
+.bg-part-2 { width: 15px; height: 15px; top: 70%; left: 85%; animation: intenseFloatTwo 12s infinite linear; background: #3b82f6; }
+.bg-part-3 { width: 7px; height: 7px; top: 80%; left: 20%; animation: intenseFloatThree 8s infinite linear; }
+.bg-part-4 { width: 18px; height: 18px; top: 25%; left: 75%; animation: intenseFloatOne 14s infinite linear; animation-delay: -4s; background: #3b82f6; }
+.bg-part-5 { width: 11px; height: 11px; top: 50%; left: 15%; animation: intenseFloatTwo 10s infinite linear; animation-delay: -2s; }
+
+@keyframes intenseBlobOne {
+  0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+  50% { transform: translate(240px, 150px) scale(1.3) rotate(180deg); }
+  100% { transform: translate(-80px, 280px) scale(0.85) rotate(360deg); }
+}
+
+@keyframes intenseBlobTwo {
+  0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+  50% { transform: translate(-260px, -180px) scale(1.25) rotate(-180deg); }
+  100% { transform: translate(60px, -280px) scale(0.9) rotate(-360deg); }
+}
+@keyframes intenseFloatOne {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+  20% { transform: translate(60px, -80px) scale(1.2); opacity: 0.5; }
+  40% { transform: translate(140px, -30px) scale(0.8); opacity: 0.2; }
+  60% { transform: translate(80px, 90px) scale(1.3); opacity: 0.6; }
+  80% { transform: translate(-60px, 40px) scale(0.9); opacity: 0.3; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+}
+@keyframes intenseFloatTwo {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-120px, -100px) rotate(90deg); }
+  50% { transform: translate(-220px, 20px) rotate(180deg); }
+  75% { transform: translate(-80px, 140px) rotate(270deg); }
+  100% { transform: translate(0, 0) rotate(360deg); }
+}
+@keyframes intenseFloatThree {
+  0% { transform: translate(0, 0); opacity: 0.4; }
+  33% { transform: translate(180px, -160px); opacity: 0.1; }
+  66% { transform: translate(-90px, -220px); opacity: 0.5; }
+  100% { transform: translate(0, 0); opacity: 0.4; }
+}

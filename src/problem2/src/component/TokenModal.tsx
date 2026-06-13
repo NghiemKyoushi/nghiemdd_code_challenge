@@ -17,8 +17,8 @@ export default function TokenModal({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-2xl flex flex-col max-h-[80vh] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm rounded-3xl">
+      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-2xl flex flex-col max-h-[60vh] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
         <div className="p-4 border-b border-slate-800">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-md font-semibold text-slate-200">Choose token</h3>
